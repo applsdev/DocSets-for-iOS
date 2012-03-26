@@ -82,7 +82,8 @@
 	CGFloat topToolbarHeight = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 44.0 : 0.0;
 	webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, topToolbarHeight, self.view.bounds.size.width, self.view.bounds.size.height - topToolbarHeight)];
 	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	webView.scalesPageToFit = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+	webView.scalesPageToFit = YES;// ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+    
 	
 	webView.delegate = self;
 	[self.view addSubview:webView];
@@ -218,8 +219,8 @@
 	activeSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
 								destructiveButtonTitle:nil
 									 otherButtonTitles:NSLocalizedString(@"Add Bookmark", nil),
-													   NSLocalizedString(@"Copy Link", nil), 
-													   NSLocalizedString(@"Open in Safari", nil), nil];
+                   NSLocalizedString(@"Copy Link", nil), 
+                   NSLocalizedString(@"Open in Safari", nil), nil];
 	[activeSheet showFromBarButtonItem:sender animated:YES];
 }
 
@@ -400,6 +401,7 @@
 	} else {
 		[toolbar setItems:landscapeToolbarItems animated:YES];
 	}
+    [webView scalesPageToFit];
 }
 
 - (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -449,10 +451,10 @@
 	} else if ([[URL scheme] hasPrefix:@"http"]) { //http or https
 		selectedExternalLinkURL = URL;
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Open Safari", nil)
-														 message:NSLocalizedString(@"This is an external link. Do you want to open it in Safari?", nil) 
-														delegate:self 
-											   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
-											   otherButtonTitles:NSLocalizedString(@"Open Safari", nil), nil];
+                                                        message:NSLocalizedString(@"This is an external link. Do you want to open it in Safari?", nil) 
+                                                       delegate:self 
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+                                              otherButtonTitles:NSLocalizedString(@"Open Safari", nil), nil];
 		alert.tag = EXTERNAL_LINK_ALERT_TAG;
 		[alert show];
 		return NO;
@@ -473,10 +475,10 @@
 	if ([error code] != -999) {
 		//-999 is the code for "operation could not be completed", which would occur when a new page is requested before the current one has finished loading
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",nil)
-														 message:[NSString stringWithFormat:@"The page could not be loaded (%@).", [error localizedDescription]]
-														delegate:nil 
-											   cancelButtonTitle:NSLocalizedString(@"OK",nil) 
-											   otherButtonTitles:nil];
+                                                        message:[NSString stringWithFormat:@"The page could not be loaded (%@).", [error localizedDescription]]
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"OK",nil) 
+                                              otherButtonTitles:nil];
 		[alert show];
 	}
 	[self updateBackForwardButtons];
@@ -518,10 +520,11 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		return YES;
-	}
-	return interfaceOrientation == UIInterfaceOrientationPortrait;
+	/*if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+     return YES;
+     }
+     return interfaceOrientation == UIInterfaceOrientationPortrait;*/
+    return YES;
 }
 
 
